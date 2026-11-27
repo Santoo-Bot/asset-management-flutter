@@ -3,9 +3,12 @@ import 'package:uuid/uuid.dart';
 
 const _uuid = Uuid();
 
+/// UUID v7 untuk id baris. Publik karena dipakai kode hasil generate drift.
+String newId() => _uuid.v7();
+
 /// Kolom bersama: UUID v7 (urut waktu), epoch ms, soft delete, dan perangkat asal.
 mixin SyncColumns on Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v7())();
+  TextColumn get id => text().clientDefault(newId)();
   IntColumn get createdAt => integer()();
   IntColumn get updatedAt => integer()();
   IntColumn get deletedAt => integer().nullable()();
@@ -155,7 +158,7 @@ class AppMeta extends Table {
 /// Konflik hasil impor paket perubahan; ditampilkan di layar "Konflik" untuk ditinjau.
 @DataClassName('SyncConflictRow')
 class SyncConflicts extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v7())();
+  TextColumn get id => text().clientDefault(newId)();
   TextColumn get entity => text()();
   TextColumn get entityId => text()();
 

@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 import 'package:path/path.dart' as p;
 
 import '../../core/hlc.dart';
+import '../../core/zip_compat.dart';
 import '../../data/db/app_database.dart';
 import '../../data/storage/data_location.dart';
 import 'change_applier.dart';
@@ -113,7 +114,7 @@ class SyncService {
           mediaCount++;
         }
       }
-      enc.close();
+      await closeZip(enc);
 
       final now = DateTime.now().millisecondsSinceEpoch;
       await (_db.update(_db.changeLog)..where((t) => t.seq.isBetweenValues(rows.first.seq, rows.last.seq) & t.deviceId.equals(_deviceId)))

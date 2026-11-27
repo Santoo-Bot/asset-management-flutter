@@ -6,6 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart' as sql;
 
+import '../../core/zip_compat.dart';
 import '../../data/db/app_database.dart';
 import '../../data/storage/data_location.dart';
 
@@ -85,7 +86,7 @@ class BackupService {
           }
         }
       }
-      enc.close();
+      await closeZip(enc);
       return out;
     } finally {
       if (await tmp.exists()) await tmp.delete(recursive: true);
