@@ -8,7 +8,7 @@ UI, kamera, printer, flashdisk, dan benchmark 10.000/50.000 belum pernah dijalan
 
 ## Mengunduh hasil build
 Buka tab **Actions** → run terbaru → bagian **Artifacts**: `AssetApp-win-x64` (zip portable, DLL VC++ sudah termasuk)
-dan `AssetApp-android-apk` (APK rilis bertanda tangan kunci debug, untuk uji).
+dan `AssetApp-android-apk`; keduanya juga terbit di tab **Releases** (APK debug untuk uji).
 
 ## Menyiapkan (sekali)
 1. `flutter create --platforms=android,windows --project-name asset_app --org id.perusahaan .`

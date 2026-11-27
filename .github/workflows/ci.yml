@@ -1,4 +1,7 @@
 name: CI
+permissions:
+  contents: write
+
 on:
   push:
     branches: [main]
@@ -77,8 +80,28 @@ jobs:
           printf '\nandroid {\n    lint {\n        checkReleaseBuilds = false\n    }\n}\n' >> android/app/build.gradle.kts
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs
-      - run: flutter build apk --release
+      - run: flutter build apk --debug
       - uses: actions/upload-artifact@v4
         with:
           name: AssetApp-android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+
+  release:
+    if: github.event_name == 'push'
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Terbitkan rilis
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="build-${{ github.run_number }}"
+          cp dist/AssetApp-android-apk/app-debug.apk "dist/AssetApp-android-debug-${tag}.apk"
+          cp dist/AssetApp-win-x64/AssetApp-win-x64.zip "dist/AssetApp-win-x64-${tag}.zip"
+          gh release create "$tag" --repo "${{ github.repository }}" --target "${{ github.sha }}" \
+            --title "Aset build ${{ github.run_number }}" \
+            --notes "Build otomatis. Android: pasang APK debug (izinkan sumber tidak dikenal). Windows: ekstrak zip lalu jalankan asset_app.exe." \
+            "dist/AssetApp-android-debug-${tag}.apk" "dist/AssetApp-win-x64-${tag}.zip"
