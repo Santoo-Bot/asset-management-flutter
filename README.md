@@ -1,7 +1,14 @@
 # Aset (Flutter) — Android + Windows portable, offline-first
 
-Mengikuti "Spesifikasi Arsitektur Final". Fase 0–3 sudah ditulis; **belum pernah dikompilasi atau dijalankan**
-(penulisnya tidak punya Flutter SDK). Jalankan langkah di bawah dan laporkan error pertama yang muncul.
+Mengikuti "Spesifikasi Arsitektur Final". Fase 0–3 sudah ditulis.
+
+**Status verifikasi (GitHub Actions):** `flutter analyze` tanpa error/warning, 49 uji lulus (1 dilewati: `app.lock`, hanya
+Windows), `flutter build windows --release` dan `flutter build apk --release` berhasil. **Belum diuji manual di perangkat**:
+UI, kamera, printer, flashdisk, dan benchmark 10.000/50.000 belum pernah dijalankan.
+
+## Mengunduh hasil build
+Buka tab **Actions** → run terbaru → bagian **Artifacts**: `AssetApp-win-x64` (zip portable, DLL VC++ sudah termasuk)
+dan `AssetApp-android-apk` (APK rilis bertanda tangan kunci debug, untuk uji).
 
 ## Menyiapkan (sekali)
 1. `flutter create --platforms=android,windows --project-name asset_app --org id.perusahaan .`
