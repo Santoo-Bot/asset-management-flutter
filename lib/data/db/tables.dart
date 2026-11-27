@@ -20,6 +20,12 @@ mixin SyncColumns on Table {
 
 @DataClassName('CategoryRow')
 class Categories extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (parent_id) REFERENCES categories (id)',
+  ];
+
   TextColumn get name => text()();
   TextColumn get codePrefix => text()();
   TextColumn get parentId => text().nullable().references(Categories, #id)();
@@ -31,6 +37,12 @@ class Categories extends Table with SyncColumns {
 
 @DataClassName('LocationRow')
 class Locations extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (parent_id) REFERENCES locations (id)',
+  ];
+
   TextColumn get name => text()();
   TextColumn get parentId => text().nullable().references(Locations, #id)();
 
@@ -47,6 +59,14 @@ class People extends Table with SyncColumns {
 
 @DataClassName('AssetRow')
 class Assets extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (category_id) REFERENCES categories (id)',
+    'FOREIGN KEY (location_id) REFERENCES locations (id)',
+    'FOREIGN KEY (assigned_to) REFERENCES people (id)',
+  ];
+
   TextColumn get assetCode => text()();
   TextColumn get name => text()();
   TextColumn get categoryId => text().references(Categories, #id)();
@@ -73,6 +93,15 @@ class Assets extends Table with SyncColumns {
 /// Riwayat hanya ditambah, tidak diubah.
 @DataClassName('MovementRow')
 class AssetMovements extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (asset_id) REFERENCES assets (id)',
+    'FOREIGN KEY (from_location_id) REFERENCES locations (id)',
+    'FOREIGN KEY (to_location_id) REFERENCES locations (id)',
+    'FOREIGN KEY (person_id) REFERENCES people (id)',
+  ];
+
   TextColumn get assetId => text().references(Assets, #id)();
 
   /// transfer | assign | return | other
@@ -86,6 +115,12 @@ class AssetMovements extends Table with SyncColumns {
 
 @DataClassName('MaintenanceRow')
 class Maintenance extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (asset_id) REFERENCES assets (id)',
+  ];
+
   TextColumn get assetId => text().references(Assets, #id)();
   IntColumn get date => integer()();
 
@@ -98,6 +133,12 @@ class Maintenance extends Table with SyncColumns {
 
 @DataClassName('AttachmentRow')
 class Attachments extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (asset_id) REFERENCES assets (id)',
+  ];
+
   TextColumn get assetId => text().references(Assets, #id)();
   TextColumn get kind => text().withDefault(const Constant('photo'))();
 
@@ -117,6 +158,13 @@ class AuditSessions extends Table with SyncColumns {
 
 @DataClassName('AuditItemRow')
 class AuditItems extends Table with SyncColumns {
+  // drift tidak menulis klausa FOREIGN KEY dari .references(); ditegakkan eksplisit di sini.
+  @override
+  List<String> get customConstraints => [
+    'FOREIGN KEY (session_id) REFERENCES audit_sessions (id)',
+    'FOREIGN KEY (asset_id) REFERENCES assets (id)',
+  ];
+
   TextColumn get sessionId => text().references(AuditSessions, #id)();
   TextColumn get assetId => text().nullable().references(Assets, #id)();
   TextColumn get scannedCode => text()();

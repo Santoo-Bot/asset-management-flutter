@@ -124,17 +124,24 @@ class ChangeApplier {
       return;
     }
     _hlc.observe(c.hlc);
-    switch (c.op) {
-      case 'insert':
-        await _insert(c, table, report);
-      case 'update':
-        await _update(c, table, report);
-      case 'delete':
-        await _delete(c, table, report);
-      default:
-        report.skipped++;
-        report.warnings.add('Operasi tidak dikenal: ${c.op}');
-        return;
+    try {
+      switch (c.op) {
+        case 'insert':
+          await _insert(c, table, report);
+        case 'update':
+          await _update(c, table, report);
+        case 'delete':
+          await _delete(c, table, report);
+        default:
+          report.skipped++;
+          report.warnings.add('Operasi tidak dikenal: ${c.op}');
+          return;
+      }
+    } on Exception catch (e) {
+      // Mis. induk (kategori/aset) belum ada di perangkat ini: lewati dan biarkan paket berikutnya melengkapi.
+      report.skipped++;
+      report.warnings.add('${c.entity} ${c.entityId} dilewati: $e');
+      return;
     }
     await _logImported(c);
   }

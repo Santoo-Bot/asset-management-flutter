@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   late AppDatabase db;
   const device = 'test-device';
   final now = DateTime(2026, 1, 1).millisecondsSinceEpoch;
@@ -51,13 +52,6 @@ void main() {
     final cat = await addCategory();
     await addAsset(cat, 'IT-001', 'Laptop');
     expect(addAsset(cat, 'IT-001', 'Laptop lain'), throwsA(isA<Exception>()));
-  });
-
-  test('DIAGNOSTIK pragma foreign_keys', () async {
-    final r = await db.customSelect('PRAGMA foreign_keys').getSingle();
-    final ddl = await db.customSelect("SELECT sql FROM sqlite_master WHERE name = 'assets'").getSingle();
-    // ignore: avoid_print
-    print('FK_PRAGMA=${r.data} DDL=${ddl.data['sql']}');
   });
 
   test('foreign key aktif: kategori tidak ada ditolak', () async {

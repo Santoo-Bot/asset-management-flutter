@@ -8,6 +8,7 @@ import 'package:asset_app/features/assets/domain/asset_models.dart';
 import 'package:asset_app/features/masters/data/drift_master_repository.dart';
 import 'package:asset_app/features/masters/domain/master_models.dart';
 import 'package:asset_app/features/sync/change_applier.dart';
+import 'package:drift/drift.dart' show driftRuntimeOptions;
 import 'package:flutter_test/flutter_test.dart';
 
 /// Satu "perangkat" lengkap dengan database sendiri dan jam yang bisa diatur.
@@ -54,6 +55,7 @@ class _Clock {
 }
 
 void main() {
+  driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   late Device a;
   late Device b;
   late String catId;
