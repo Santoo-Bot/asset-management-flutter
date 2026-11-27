@@ -151,3 +151,25 @@ class AppMeta extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+/// Konflik hasil impor paket perubahan; ditampilkan di layar "Konflik" untuk ditinjau.
+@DataClassName('SyncConflictRow')
+class SyncConflicts extends Table {
+  TextColumn get id => text().clientDefault(() => _uuid.v7())();
+  TextColumn get entity => text()();
+  TextColumn get entityId => text()();
+
+  /// Bidang yang bentrok (null untuk konflik hapus-vs-ubah atau kode kembar).
+  TextColumn get field => text().nullable()();
+
+  /// field | delete_vs_update | duplicate_code
+  TextColumn get kind => text()();
+  TextColumn get localValue => text().nullable()();
+  TextColumn get remoteValue => text().nullable()();
+  TextColumn get remoteHlc => text()();
+  IntColumn get createdAt => integer()();
+  IntColumn get resolvedAt => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

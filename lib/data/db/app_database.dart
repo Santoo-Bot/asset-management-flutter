@@ -22,6 +22,7 @@ part 'app_database.g.dart';
     AuditItems,
     ChangeLog,
     AppMeta,
+    SyncConflicts,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -91,15 +92,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   /// Pencarian awalan FTS5; hanya aset aktif, maksimal [limit] baris.
-  /// Input pengguna dibersihkan agar tidak menjadi sintaks FTS.
   Future<List<AssetRow>> searchAssets(String text, {int limit = 100}) {
-    final tokens = text
-        .split(RegExp(r'\s+'))
-        .map((t) => t.replaceAll(RegExp(r'[^\p{L}\p{N}_-]', unicode: true), ''))
-        .where((t) => t.isNotEmpty)
-        .map((t) => '"$t"*')
-        .join(' ');
-    if (tokens.isEmpty) return Future.value(const []);
+    final tokens = toFtsQuery(text);
+    if (tokens == null) return Future.value(const []);
     return customSelect(
       'SELECT a.* FROM asset_fts f JOIN assets a ON a.rowid = f.rowid '
       'WHERE asset_fts MATCH ? AND a.deleted_at IS NULL ORDER BY rank LIMIT ?',
@@ -107,4 +102,16 @@ class AppDatabase extends _$AppDatabase {
       readsFrom: {assets},
     ).map((r) => assets.map(r.data)).get();
   }
+}
+
+/// Mengubah teks pengguna menjadi kueri awalan FTS5 yang aman (tanpa sintaks FTS).
+/// Mengembalikan null bila tidak ada token yang valid.
+String? toFtsQuery(String text) {
+  final tokens = text
+      .split(RegExp(r'\s+'))
+      .map((t) => t.replaceAll(RegExp(r'[^\p{L}\p{N}_-]', unicode: true), ''))
+      .where((t) => t.isNotEmpty)
+      .map((t) => '"$t"*')
+      .join(' ');
+  return tokens.isEmpty ? null : tokens;
 }

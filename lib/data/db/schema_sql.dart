@@ -16,6 +16,8 @@ const List<String> schemaV1ExtraSql = [
   'CREATE INDEX idx_audit_items_session ON audit_items(session_id)',
   'CREATE INDEX idx_changelog_entity ON change_log(entity, entity_id)',
   'CREATE INDEX idx_changelog_export ON change_log(exported_at)',
+  // Dedupe paket perubahan: HLC memuat device id sehingga unik secara global.
+  'CREATE UNIQUE INDEX idx_changelog_hlc ON change_log(hlc, entity_id)',
 
   // ---- FTS5 (external content: tidak menyalin teks, hanya indeks) ----
   '''
