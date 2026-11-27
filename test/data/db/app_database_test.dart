@@ -53,6 +53,13 @@ void main() {
     expect(addAsset(cat, 'IT-001', 'Laptop lain'), throwsA(isA<Exception>()));
   });
 
+  test('DIAGNOSTIK pragma foreign_keys', () async {
+    final r = await db.customSelect('PRAGMA foreign_keys').getSingle();
+    final ddl = await db.customSelect("SELECT sql FROM sqlite_master WHERE name = 'assets'").getSingle();
+    // ignore: avoid_print
+    print('FK_PRAGMA=${r.data} DDL=${ddl.data['sql']}');
+  });
+
   test('foreign key aktif: kategori tidak ada ditolak', () async {
     expect(addAsset('tidak-ada', 'X-1', 'Barang'), throwsA(isA<Exception>()));
   });
