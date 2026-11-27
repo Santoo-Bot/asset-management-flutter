@@ -1,0 +1,16 @@
+.dart_tool/
+.packages
+build/
+*.g.dart
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+*.iml
+# Android
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+# Data lokal saat pengembangan
+/data/
+/tool/out/
