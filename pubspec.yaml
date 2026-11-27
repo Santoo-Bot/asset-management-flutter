@@ -34,7 +34,7 @@ dependencies:
   image_picker: ^1.1.2      # kamera, hanya Android
   mobile_scanner: ^5.1.1    # hanya Android
   # Backup dan paket perubahan (zip)
-  archive: 3.6.1      # dikunci: API stream berubah di 4.x
+  archive: 3.4.9      # dikunci: dipaksa oleh excel 4.0.3; API stream berubah di 4.x
 
 dev_dependencies:
   flutter_test:

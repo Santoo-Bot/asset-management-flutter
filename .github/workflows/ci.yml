@@ -15,6 +15,7 @@ jobs:
           cache: true
       - name: Buat folder platform (tidak ikut repo)
         run: flutter create --platforms=android,windows --project-name asset_app --org id.perusahaan .
+      - run: rm -f test/widget_test.dart
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs
       - name: Analyze
