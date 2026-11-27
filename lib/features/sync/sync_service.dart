@@ -113,7 +113,7 @@ class SyncService {
           mediaCount++;
         }
       }
-      await enc.close();
+      enc.close();
 
       final now = DateTime.now().millisecondsSinceEpoch;
       await (_db.update(_db.changeLog)..where((t) => t.seq.isBetweenValues(rows.first.seq, rows.last.seq) & t.deviceId.equals(_deviceId)))

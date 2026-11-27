@@ -85,7 +85,7 @@ class BackupService {
           }
         }
       }
-      await enc.close();
+      enc.close();
       return out;
     } finally {
       if (await tmp.exists()) await tmp.delete(recursive: true);
